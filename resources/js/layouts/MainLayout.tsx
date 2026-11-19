@@ -1,21 +1,45 @@
-import type { ReactNode } from "react";
-import Navbar from "@/components/Layout/Navbar/Navbar";
-import Footer from "@/components/Layout/Footer/Footer";
-import QuoteBar from "@/components/Layout/QuoteBar/QuoteBar";
-import PageTransition from "@/components/Layout/PageTransition/PageTransition";
-import CustomCursor from "@/components/Layout/Cursor/CustomCursor";
-import MotionProvider from "@/components/Providers/MotionProvider";
+import { usePage } from '@inertiajs/react';
+import { useRef } from 'react';
+import type { ReactNode } from 'react';
+import CustomCursor from '@/components/Layout/Cursor/CustomCursor';
+import Footer from '@/components/Layout/Footer/Footer';
+import Navbar from '@/components/Layout/Navbar/Navbar';
+import QuoteBar from '@/components/Layout/QuoteBar/QuoteBar';
+import { useSiteMotion } from '@/hooks/use-site-motion';
+import { LangProvider } from '@/lib/site/i18n';
+import { QuoteProvider } from '@/lib/site/quote';
+import { ThemeProvider } from '@/lib/site/theme';
+import { TransitionProvider } from '@/lib/site/transition';
 
-export default function MainLayout({ children, quoteCount = 0 }: { children: ReactNode; quoteCount?: number }) {
-  return <>
-    <Navbar />
-    {/* <MotionProvider>{children}</MotionProvider> */}
-<main className="min-h-screen bg-white">
+function Shell({ children }: { children: ReactNode }) {
+    const { url } = usePage();
+    const main = useRef<HTMLElement>(null);
+    useSiteMotion(main);
+    return (
+        <>
+            <Navbar />
+            {/* key: every page gets fresh DOM, since heading animations split text into word spans */}
+            <main key={url.split(/[?#]/)[0]} ref={main}>
                 {children}
             </main>
-    <Footer />
-    <QuoteBar count={quoteCount} />
-    <PageTransition />
-    <CustomCursor />
-  </>;
+            <Footer />
+            <QuoteBar />
+            <CustomCursor />
+        </>
+    );
+}
+
+/** Layout for the public Brandology pages: header, footer, quote list, motion, and the light / dark mood. */
+export default function MainLayout({ children }: { children: ReactNode }) {
+    return (
+        <LangProvider>
+            <ThemeProvider>
+                <QuoteProvider>
+                    <TransitionProvider>
+                        <Shell>{children}</Shell>
+                    </TransitionProvider>
+                </QuoteProvider>
+            </ThemeProvider>
+        </LangProvider>
+    );
 }

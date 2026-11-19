@@ -1,0 +1,439 @@
+/*
+ * Brandology public site: colours, fonts, type scale and motion helpers.
+ *
+ * Everything that sets a page-wide style is scoped to .brd-site (the wrapper rendered by
+ * the MainLayout), so the dashboard and auth screens keep the app's own look.
+ * The light / dark mood is a class on that wrapper (.brd-dark), not on <html>.
+ */
+
+@theme inline {
+    /* brand */
+    --color-black: #16171c;
+    --color-ink: #1f1f25;
+    --color-ink-2: #2a2b33;
+    --color-orange: #f99d1b;
+    --color-yellow: #fdca0f;
+    --color-signal: #fd540f;
+    --color-paper: #f5f5f3;
+    --color-grey-600: #5f6066;
+    --color-grey-400: #9a9ba1;
+    --color-grey-200: #e6e6e6;
+    --color-blue: #1d5fb4;
+    --color-green: #13804f;
+    --color-danger: #b42318;
+    --color-sign-red: #c0362c;
+
+    /* mood-aware surfaces (channel variables are set on .brd-site / .brd-dark below) */
+    --color-surface: rgb(var(--brd-surface));
+    --color-surface2: rgb(var(--brd-surface2));
+    --color-fg: rgb(var(--brd-fg));
+    --color-dim: rgb(var(--brd-dim));
+    --color-line: rgb(var(--brd-line));
+
+    --font-display: 'Archivo', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    --font-body: 'Roboto', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+    --font-arabic: 'IBM Plex Sans Arabic', 'Roboto', sans-serif;
+
+    --container-site: 1240px;
+
+    --text-h1: clamp(40px, 6.4vw, 84px);
+    --text-h1--line-height: 1.05;
+    --text-h1-sm: clamp(32px, 4.8vw, 64px);
+    --text-h1-sm--line-height: 1.05;
+    --text-h2: clamp(30px, 4vw, 52px);
+    --text-h2--line-height: 1.05;
+    --text-lead: clamp(17px, 1.6vw, 20px);
+    --text-lead--line-height: 1.6;
+
+    --animate-rise: rise 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    @keyframes rise {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+}
+
+@keyframes draw {
+    from {
+        stroke-dashoffset: var(--len, 200);
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.brd-site {
+    --brd-surface: 255 255 255;
+    --brd-surface2: 245 245 243;
+    --brd-fg: 22 23 28;
+    --brd-dim: 95 96 102;
+    --brd-line: 230 230 230;
+    color-scheme: light;
+}
+.brd-site.brd-dark {
+    --brd-surface: 31 32 40;
+    --brd-surface2: 38 39 49;
+    --brd-fg: 244 244 242;
+    --brd-dim: 166 167 174;
+    --brd-line: 58 59 70;
+    color-scheme: dark;
+}
+
+@layer base {
+    .brd-site {
+        @apply bg-black font-body text-base leading-relaxed text-fg antialiased;
+        min-height: 100vh;
+        overflow-x: clip;
+    }
+    .brd-site ::selection {
+        background: #16171c;
+        color: #fdca0f;
+    }
+    .brd-site h1,
+    .brd-site h2,
+    .brd-site h3,
+    .brd-site h4 {
+        @apply font-display;
+        text-wrap: balance;
+    }
+    .brd-site :focus-visible {
+        @apply outline outline-[3px] outline-offset-[3px] outline-orange;
+    }
+    .brd-site .on-dark .lead {
+        @apply text-grey-400;
+    }
+    [dir='rtl'] .brd-site {
+        @apply font-arabic;
+    }
+    [dir='rtl'] .brd-site h1,
+    [dir='rtl'] .brd-site h2,
+    [dir='rtl'] .brd-site h3,
+    [dir='rtl'] .brd-site h4 {
+        @apply font-arabic font-bold;
+        line-height: 1.3;
+    }
+    [dir='rtl'] .brd-site * {
+        letter-spacing: 0 !important;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .brd-site *,
+        .brd-site *::before,
+        .brd-site *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+    }
+}
+
+@layer components {
+    .brd-site .container-site {
+        @apply mx-auto w-full max-w-site px-5;
+    }
+    .brd-site .eyebrow {
+        @apply inline-flex items-center gap-2.5 font-mono text-[13px] font-medium tracking-[.12em] text-orange uppercase before:h-0.5 before:w-[22px] before:bg-current before:content-[''] rtl:font-arabic;
+    }
+    .brd-site .lead {
+        @apply max-w-[60ch] text-lead text-dim;
+    }
+    .brd-site .stripe {
+        height: 14px;
+        background: repeating-linear-gradient(
+            -45deg,
+            var(--color-yellow) 0 18px,
+            var(--color-black) 18px 36px
+        );
+    }
+    [dir='rtl'] .brd-site .stripe {
+        background: repeating-linear-gradient(
+            45deg,
+            var(--color-yellow) 0 18px,
+            var(--color-black) 18px 36px
+        );
+    }
+    .brd-site .field-input {
+        @apply w-full rounded-[10px] border-2 border-line bg-surface p-3.5 font-body text-base text-fg focus:border-orange focus:outline-none rtl:font-arabic;
+    }
+    .brd-site .field-label {
+        @apply font-display text-[13px] font-bold tracking-[.05em] uppercase rtl:font-arabic;
+    }
+}
+
+/* ===== Motion (GSAP / Three.js) ===== */
+.sw {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+}
+.sw-i {
+    display: inline-block;
+    will-change: transform;
+}
+.motion-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #f99d1b;
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    z-index: 70;
+    pointer-events: none;
+}
+[dir='rtl'] .motion-progress {
+    transform-origin: 100% 50%;
+}
+.cursor-dot,
+.cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 90;
+    border-radius: 50%;
+}
+.cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: #f99d1b;
+}
+.cursor-ring {
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid #f99d1b;
+}
+.motion-line {
+    position: absolute;
+    inset-inline-start: -2px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #f99d1b;
+    transform-origin: top;
+    z-index: 1;
+}
+[data-tilt] {
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+[data-tilt]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s;
+    background: radial-gradient(
+        260px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(249, 157, 27, 0.16),
+        transparent 65%
+    );
+}
+[data-tilt]:hover::after {
+    opacity: 1;
+}
+[data-parallax] {
+    overflow: hidden;
+}
+[data-magnetic] {
+    will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+    .cursor-dot,
+    .cursor-ring,
+    .motion-progress {
+        display: none;
+    }
+}
+
+/* ===== Soft shapes, tape, smooth scroll ===== */
+/* eyebrow labels: darker orange on light sheets for contrast */
+.brd-site :is(.bg-surface, .bg-surface2) .eyebrow {
+    color: #a85a00;
+}
+.brd-site.brd-dark :is(.bg-surface, .bg-surface2) .eyebrow {
+    color: #f99d1b;
+}
+.dots {
+    background-image: radial-gradient(currentColor 1.8px, transparent 2.2px);
+    background-size: 16px 16px;
+}
+.cursor-bubble {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 90;
+    pointer-events: none;
+    display: grid;
+    place-items: center;
+    width: 92px;
+    height: 92px;
+    margin: -46px 0 0 -46px;
+    border-radius: 9999px;
+    background: #16171c;
+    color: #fdca0f;
+    font:
+        700 14px/1 'Archivo',
+        'IBM Plex Sans Arabic',
+        sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transform: scale(0);
+    opacity: 0;
+}
+.draw path,
+.draw circle,
+.draw rect,
+.draw line,
+.draw polyline {
+    stroke-dasharray: 220;
+    stroke-dashoffset: 0;
+}
+.group:hover .draw path,
+.group:hover .draw circle,
+.group:hover .draw rect,
+.group:hover .draw line,
+.group:hover .draw polyline {
+    animation: draw 0.9s cubic-bezier(0.4, 0.1, 0.2, 1) both;
+    --len: 220;
+}
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+.hand {
+    font-family: 'Caveat', 'Aref Ruqaa', cursive;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1.1;
+}
+
+/* Theme switch: the new mood grows out of the toggle button as a circle */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+    z-index: 1;
+}
+::view-transition-new(root) {
+    z-index: 2;
+}
+.brd-dark img:not([data-keep]) {
+    filter: brightness(0.92) contrast(1.04);
+}
+
+/* Preloader shown by the first page load (see resources/views/partials/preloader.blade.php) */
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    background: #16171c;
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s;
+}
+#preloader.done {
+    opacity: 0;
+    visibility: hidden;
+}
+#preloader .mark {
+    position: relative;
+    width: 132px;
+    height: 132px;
+}
+#preloader .ring {
+    position: absolute;
+    inset: 0;
+    animation: pl-spin 1.6s linear infinite;
+}
+#preloader .ring i {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    transform: rotate(var(--a)) translate(54px);
+    animation: pl-pulse 1.2s ease-in-out infinite;
+    animation-delay: var(--d);
+}
+#preloader .b {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font:
+        900 52px/1 'Archivo',
+        system-ui,
+        sans-serif;
+    color: #fff;
+}
+#preloader .bar {
+    position: absolute;
+    left: 50%;
+    bottom: -44px;
+    width: 120px;
+    height: 3px;
+    margin-left: -60px;
+    background: #2a2b33;
+    overflow: hidden;
+    border-radius: 2px;
+}
+#preloader .bar::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: #f99d1b;
+    animation: pl-bar 1.1s ease-in-out infinite;
+}
+@keyframes pl-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes pl-pulse {
+    0%,
+    100% {
+        opacity: 0.35;
+        scale: 0.7;
+    }
+    50% {
+        opacity: 1;
+        scale: 1;
+    }
+}
+@keyframes pl-bar {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(250%);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #preloader .ring,
+    #preloader .ring i,
+    #preloader .bar::after {
+        animation: none;
+    }
+}

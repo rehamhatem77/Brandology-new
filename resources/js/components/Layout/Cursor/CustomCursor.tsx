@@ -1,15 +1,43 @@
-import { useEffect } from "react";
-import { finePointer, prefersReducedMotion, gsap } from "../../../Lib/motion";
+import { useEffect, useRef } from 'react';
+import { finePointer, gsap, prefersReduced } from '@/lib/site/reveals';
+
+/** Cursor bubble: shows a label over anything that carries data-cursor="..." (mouse only). */
 export default function CustomCursor() {
-  useEffect(() => {
-    if (!finePointer() || prefersReducedMotion()) return;
-    const dot = document.querySelector<HTMLElement>(".cursor-dot");
-    const ring = document.querySelector<HTMLElement>(".cursor-ring");
-    if (!dot || !ring) return;
-    const move = (e: MouseEvent) => { gsap.to(dot, { x: e.clientX, y: e.clientY, duration: 0.08 }); gsap.to(ring, { x: e.clientX, y: e.clientY, duration: 0.22, ease: "power2.out" }); };
-    const hover = (e: Event) => { const target = e.target as HTMLElement; if (target.closest("a,button,[data-cursor]")) ring.classList.add("cursor-hover"); else ring.classList.remove("cursor-hover"); };
-    window.addEventListener("mousemove", move); document.addEventListener("mouseover", hover);
-    return () => { window.removeEventListener("mousemove", move); document.removeEventListener("mouseover", hover); };
-  }, []);
-  return <><div className="cursor-dot" aria-hidden="true"/><div className="cursor-ring" aria-hidden="true"/></>;
+    const el = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        const bubble = el.current;
+        if (!bubble || !finePointer() || prefersReduced()) return;
+        const x = gsap.quickTo(bubble, 'x', { duration: 0.35, ease: 'power3' });
+        const y = gsap.quickTo(bubble, 'y', { duration: 0.35, ease: 'power3' });
+        let on = false;
+        const move = (e: PointerEvent) => {
+            x(e.clientX);
+            y(e.clientY);
+            const target = (e.target as HTMLElement).closest?.(
+                '[data-cursor]',
+            ) as HTMLElement | null;
+            if (target && !on) {
+                on = true;
+                bubble.textContent = target.dataset.cursor ?? '';
+                gsap.to(bubble, {
+                    scale: 1,
+                    opacity: 1,
+                    duration: 0.35,
+                    ease: 'back.out(2)',
+                });
+            } else if (!target && on) {
+                on = false;
+                gsap.to(bubble, { scale: 0, opacity: 0, duration: 0.25 });
+            } else if (
+                target &&
+                on &&
+                bubble.textContent !== target.dataset.cursor
+            ) {
+                bubble.textContent = target.dataset.cursor ?? '';
+            }
+        };
+        window.addEventListener('pointermove', move);
+        return () => window.removeEventListener('pointermove', move);
+    }, []);
+    return <div ref={el} className="cursor-bubble" aria-hidden="true" />;
 }

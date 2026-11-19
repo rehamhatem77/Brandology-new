@@ -36,6 +36,11 @@
 
         @fonts
 
+        {{-- Brandology site fonts: Archivo, Roboto, IBM Plex Mono / Sans Arabic, Caveat --}}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Roboto:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Caveat:wght@700&display=swap">
+
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
@@ -43,6 +48,11 @@
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">
+        {{-- The public site opens with the preloader; app screens (auth, settings, dashboard) do not. --}}
+        @unless (\Illuminate\Support\Str::startsWith($page['component'] ?? '', ['auth/', 'settings/', 'dashboard']))
+            @include('partials.preloader')
+        @endunless
+
         <x-inertia::app />
     </body>
 </html>
