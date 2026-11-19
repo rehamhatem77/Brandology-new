@@ -7,10 +7,10 @@ import MotionProvider from "@/components/Providers/MotionProvider";
 import type { ReactNode } from "react";
 
 
-export default function MainLayout({ children, quoteCount = 0 }: { children: ReactNode; quoteCount?: number }) {
+export default function MainLayout({  quoteCount = 0 }: {  quoteCount?: number }) {
   return <>
     <Navbar />
-    <MotionProvider>{children}</MotionProvider>
+
     <Footer />
     <QuoteBar count={quoteCount} />
     <PageTransition />

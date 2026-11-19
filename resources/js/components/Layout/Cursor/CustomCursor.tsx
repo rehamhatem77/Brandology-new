@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { finePointer, prefersReducedMotion, gsap } from "../../../Lib/motion";
+import { finePointer, prefersReducedMotion, gsap } from "../../../lib/motion";
 export default function CustomCursor() {
   useEffect(() => {
     if (!finePointer() || prefersReducedMotion()) return;

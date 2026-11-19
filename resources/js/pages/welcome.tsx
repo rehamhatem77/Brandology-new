@@ -9,7 +9,7 @@ export default function Welcome() {
     return (
         <>
             <Head title="Welcome" />
-          <MainLayout >
+          <MainLayout  quoteCount={0}>
 </MainLayout>
 
 

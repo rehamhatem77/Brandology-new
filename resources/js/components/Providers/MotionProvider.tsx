@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import type { ReactNode, RefObject } from "react";
 import { usePage } from "@inertiajs/react";
 import Lenis from "lenis";
-import { gsap, ScrollTrigger, initPageMotion, prefersReducedMotion } from "../../Lib/motion";
+import { gsap, ScrollTrigger, initPageMotion, prefersReducedMotion } from "../../lib/motion";
 
 export default function MotionProvider({ children }: { children: ReactNode }) {
   const root = useRef<HTMLElement | null>(null);

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { router } from "@inertiajs/react";
-import { gsap, prefersReducedMotion } from "../../../Lib/motion";
+import { prefersReducedMotion } from "@/lib/motion";
 const COLORS = ["#fdca0f", "#f99d1b", "#16171c", "#f99d1b", "#fdca0f"];
 export default function PageTransition() {
   useEffect(() => {
