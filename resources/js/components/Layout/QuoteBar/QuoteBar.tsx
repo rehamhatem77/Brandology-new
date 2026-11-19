@@ -1,5 +1,5 @@
-import { useLanguage } from "@/hooks/useLanguage";
 import { Link } from "@inertiajs/react";
+import { useLanguage } from "../../../hooks/useLanguage";
 // Replace this demo count with your quote/cart context or a shared Inertia prop.
 export default function QuoteBar({ count = 0 }: { count?: number }) {
   const { localize, ar } = useLanguage();

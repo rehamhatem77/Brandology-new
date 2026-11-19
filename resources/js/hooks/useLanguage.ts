@@ -1,6 +1,6 @@
+import { NAV_LABELS } from "@/Data/navigation";
 import { usePage } from "@inertiajs/react";
 import { useEffect, useMemo } from "react";
-import { NAV_LABELS } from "../Data/navigation";
 
 export function useLanguage() {
   const page = usePage<{ locale?: string }>();

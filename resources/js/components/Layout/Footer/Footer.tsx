@@ -1,9 +1,11 @@
 import { Link } from "@inertiajs/react";
-import { NAV } from "../../../Data/navigation";
+
 import { FOOTER_SERVICES } from "../../../Data/footer";
 import { CONFIG } from "../../../Data/config";
+import { useLanguage } from "../../../hooks/useLanguage";
+import { NAV } from "@/Data/navigation";
 import SocialLinks from "./SocialLinks";
-import { useLanguage } from "@/hooks/useLanguage";
+
 
 export default function Footer() {
   const { labels, localize, ar } = useLanguage();

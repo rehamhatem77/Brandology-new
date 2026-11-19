@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link } from "@inertiajs/react";
 import NavLinks from "./NavLinks";
 import LanguageSwitcher from "./LanguageSwitcher";
-import { useLanguage } from "@/hooks/useLanguage";
 import Button from "@/components/ui/Button2";
+import { useLanguage } from "@/hooks/useLanguage";
+
+
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);

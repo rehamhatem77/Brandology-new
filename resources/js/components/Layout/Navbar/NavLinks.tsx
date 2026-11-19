@@ -1,6 +1,6 @@
 import { Link, usePage } from "@inertiajs/react";
-import { NAV } from "../../../Data/navigation";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "../../../hooks/useLanguage";
+import { NAV } from "@/Data/navigation";
 
 export default function NavLinks({ onClick, mobile = false }: { onClick?: () => void; mobile?: boolean }) {
   const { labels, localize } = useLanguage();

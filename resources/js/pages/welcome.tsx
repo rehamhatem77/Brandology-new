@@ -8,9 +8,13 @@ export default function Welcome() {
 
     return (
         <>
-            <Head title="Welcome" />
-          <MainLayout  quoteCount={0}>
-</MainLayout>
+             <Head title="Home | Brandology" />
+
+            <MainLayout quoteCount={0}>
+                <div className="bg-white">
+                  
+                </div>
+            </MainLayout>
 
 
 
